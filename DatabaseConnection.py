@@ -1,14 +1,18 @@
 from itertools import product
-
 from fastapi import FastAPI
 from models import Product
+from Database import session, engine
+import DatabaseModels
+
 app = FastAPI()
+
+DatabaseModels.Base.metadata.create_all(engine)
 
 @app.get("/")
 def greet():
     return "Hello Form FastAPI"
 
-products = [ 
+products = [
     Product(id=1,name="Phone",description= "Budget Phone",price=99,quantity=10),
     Product(id=2,name="Laptop",description= "Business Laptop",price=668,quantity=110),
     Product(id=3,name="Monitor",description= "Coding Monitor",price=780.69,quantity=20),
@@ -16,6 +20,8 @@ products = [
 
 @app.get("/products")
 def get_all_products():
+    db = session()
+
     return products
 
 @app.get("/product/{id}")
